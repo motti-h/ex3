@@ -1,0 +1,6 @@
+
+    [
+        { "id": "1" , "categoryId": "kids", "name": "teddybar" , "itemsInStock": 1 },
+        { "id": "2" , "categoryId": "kids", "name": "tiger" , "itemsInStock": 3 },
+        { "id": "3" , "categoryId": "women", "name": "tshirt" , "itemsInStock": 6 }
+    ]
