@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import {setup} from './controllers/controllers'
-import * as ProductsHandlers from './routes/ProductsHendlers'
+import {config} from './controllers/routeConfig'
+import * as ProductsHandlers from './routesHendlers/ProductsHendlers'
 
 const app = express();
 
@@ -11,7 +11,10 @@ app.use(cors());
 app.use(express.static('./src/video'));
 //app.use('/products/:id', ProductsHandlers.productGetSpecificHandler );
 //app.use('/products/', ProductsHandlers.productPostHandler );
+Object.keys(config).forEach((k) => {
+    const routeConfig = config[k];
+    app.use(routeConfig.prefix, routeConfig.router);
+  });
 
-setup(app);
 
 export { app };

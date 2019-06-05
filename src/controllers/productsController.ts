@@ -1,27 +1,22 @@
-import { Application } from 'express';
-import * as ProductsHendlers from '../routes/ProductsHendlers'
+import { Router } from 'express';
+import * as ProductsHendlers from '../routesHendlers/ProductsHendlers';
+import * as asyncMaker from '../utils/async';
 
-function setup(app: Application) {
+const productRouter = Router();
 
-// get all products
-  app.get('/products', ProductsHendlers.productGetHandler );
+productRouter.use('/:id', ProductsHendlers.middleCheckId); // middleware id check
 
-// get specific product
-  app.get('/products/:id', ProductsHendlers.productGetSpecificHandler, ProductsHendlers.error404Handler);
-  //app.get('/products/:id', );
+productRouter.get('/', ProductsHendlers.productGetHandler);
 
-// post product
+// get specific product is ASYNC 
+productRouter.get('/:id', asyncMaker.wrapAsyncAndSend(ProductsHendlers.productGetSpecificHandler) );
 
-  app.post('/products/', ProductsHendlers.productPostHandler, ProductsHendlers.error409Handler);
-  //app.post('products/', ProductsHendlers.error409Handler);
-  
-// put product
+productRouter.delete('/:id', ProductsHendlers.productDeleteHandler);
+productRouter.use('/', ProductsHendlers.middleCheckName); // middleware name check
 
-  app.put('/products/:id',ProductsHendlers.productPutHandler, ProductsHendlers.error404Handler);
+productRouter.post('/', ProductsHendlers.productPostHandler);
 
-// delete product
-  
-  app.delete('/products/:id',ProductsHendlers.productDeleteHandler,  ProductsHendlers.error404Handler);
-}
+productRouter.put('/:id', ProductsHendlers.productPutHandler);
 
-export {setup};
+productRouter.use(ProductsHendlers.endError);
+export { productRouter };
