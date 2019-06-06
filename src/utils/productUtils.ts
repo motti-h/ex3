@@ -7,10 +7,6 @@ function getAllProducts(): Product[] {
   return products;
 }
 
-function getAllProductsPromise(): Promise<Product[]> {
-  return Promise.resolve(products);
-}
-
 function findProduct(id: number): Product | undefined {
   return products.find(p => p.id === id.toString());
 }
@@ -18,10 +14,10 @@ function findProduct(id: number): Product | undefined {
 function getProductsLength(): number {
   return products.length;
 }
+
 export {
     findProduct,
     getAllProducts,
     getProductsLength,
     Product,
-    getAllProductsPromise,
 };

@@ -6,11 +6,11 @@ function getAllCategories() : Category[]
     return categories;
 }
 
-function isCategoryExist(id: number): Category | undefined {
+function getCategoryById(id: number): Category | undefined {
     return categories.find(p => p.id === id.toString());
 }
 
 function getCategoriesLength(): number {
     return categories.length;
 }
-export {isCategoryExist , getAllCategories, getCategoriesLength }; 
+export {getCategoryById , getAllCategories, getCategoriesLength }; 

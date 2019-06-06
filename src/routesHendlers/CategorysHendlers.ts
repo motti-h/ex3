@@ -10,36 +10,22 @@ export function categoryGetHandler(req: Request, res: Response, next: NextFuncti
     res.send(categories);
 }
 
-export function categoryGetproductsByIdHandler(req: Request, res: Response, next: NextFunction): any {
+export function categoryGetProductsByIdHandler(req: Request, res: Response, next: NextFunction): any {
     const id = req.params.id; // url params
-
-    if ( isNaN(id) ) {
-        next(new Error('400'));
-        return;
-    }
-    const existing = categoryUtils.isCategoryExist(id);
+    const existing = categoryUtils.getCategoryById(id);
 
     if (!existing) {
         next(new Error('404'));
         return;
     }
-    const productsArr: Product[] = new Array<Product>();
-    for (const item of products) {
-        if (item.categoryId === existing.id) {
-            productsArr.push(item);
-        }
-    }
+
+    const productsArr = products.filter(product => (product.categoryId === existing.id));
     res.send(productsArr);
 }
 
 export function categoryGetByIdHandler(req: Request, res: Response, next: NextFunction): any {
     const id = req.params.id; // url params
-
-    if ( isNaN(id) ) {
-        next(new Error('400'));
-        return;
-    }
-    const existing = categoryUtils.isCategoryExist(id);
+    const existing = categoryUtils.getCategoryById(id);
 
     if (!existing) {
         next(new Error('404'));
@@ -51,6 +37,7 @@ export function categoryGetByIdHandler(req: Request, res: Response, next: NextFu
 
 export function categoryPostHandler(req: Request, res: Response, next: NextFunction): any {
     const newCategory: Category = req.body as Category;
+
     for (const item of categories) {
         if (item.name === newCategory.name) {
             next(new Error('409'));
@@ -64,13 +51,8 @@ export function categoryPostHandler(req: Request, res: Response, next: NextFunct
 
 export function categoryPutHandler(req: Request, res: Response, next: NextFunction): any {
     const id = req.params.id;
+    const existing = categoryUtils.getCategoryById(id);
 
-    if (isNaN(id)) {
-        next(new Error('400'));
-        return;
-    }
-
-    const existing = categoryUtils.isCategoryExist(id);
     if (!existing) {
        next(new Error('404'));
        return;
@@ -84,11 +66,6 @@ export function categoryDeleteHandler(req: Request, res: Response, next: NextFun
     const id = req.params.id;
     const existingIndex = categories.findIndex(p => p.id === id);
 
-    if (isNaN(id)) {
-        next(new Error('400'));
-        return;
-    }
-
     if (existingIndex < 0) {
         next('404');
         return;
@@ -96,12 +73,4 @@ export function categoryDeleteHandler(req: Request, res: Response, next: NextFun
 
     categories.splice(existingIndex, 1);
     res.sendStatus(204);
-}
-
-export function endError(err: Error , req: Request, res: Response, next: NextFunction) {
-    if ( parseInt(err.message, 10) ) {
-        res.sendStatus( parseInt(err.message, 10) );
-    } else {
-        next(err);
-    }
 }
