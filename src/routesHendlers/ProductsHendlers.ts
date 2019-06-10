@@ -27,7 +27,7 @@ export function productPutHandler(req: Request, res: Response, next: NextFunctio
     const existing = productUtils.findProduct(id);
 
     if (!existing) {
-       next(new Error('404'));
+       res.sendStatus(404);
        return;
     }
 
@@ -47,7 +47,8 @@ export function productDeleteHandler(req: Request, res: Response, next: NextFunc
     const existingIndex = products.findIndex(product => product.id === id);
 
     if (existingIndex < 0) {
-        next(new Error('404'));
+        res.sendStatus(404);
+        return;
     }
 
     products.splice(existingIndex, 1);

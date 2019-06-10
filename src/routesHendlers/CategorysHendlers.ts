@@ -1,5 +1,4 @@
 import { Category } from '../models';
-import { Product } from '../models';
 import { store } from '../store';
 import { Response, Request, NextFunction, RequestHandler } from 'express';
 import * as categoryUtils from '../utils/categoryUtils';
@@ -15,7 +14,7 @@ export function categoryGetProductsByIdHandler(req: Request, res: Response, next
     const existing = categoryUtils.getCategoryById(id);
 
     if (!existing) {
-        next(new Error('404'));
+        res.sendStatus(404);
         return;
     }
 
@@ -28,7 +27,7 @@ export function categoryGetByIdHandler(req: Request, res: Response, next: NextFu
     const existing = categoryUtils.getCategoryById(id);
 
     if (!existing) {
-        next(new Error('404'));
+        res.sendStatus(404);
         return;
     }
 
@@ -47,6 +46,7 @@ export function categoryPostHandler(req: Request, res: Response, next: NextFunct
     newCategory.id = (store.products.length + 1).toString();
     store.categories.push(newCategory);
     res.sendStatus(201);
+    return;
 }
 
 export function categoryPutHandler(req: Request, res: Response, next: NextFunction): any {
@@ -54,7 +54,7 @@ export function categoryPutHandler(req: Request, res: Response, next: NextFuncti
     const existing = categoryUtils.getCategoryById(id);
 
     if (!existing) {
-       next(new Error('404'));
+        res.sendStatus(404);
        return;
     }
     const newCategory: Category = req.body as Category;
@@ -67,10 +67,11 @@ export function categoryDeleteHandler(req: Request, res: Response, next: NextFun
     const existingIndex = categories.findIndex(p => p.id === id);
 
     if (existingIndex < 0) {
-        next('404');
+        res.sendStatus(404);
         return;
     }
 
     categories.splice(existingIndex, 1);
     res.sendStatus(204);
+    return;
 }
